@@ -14,7 +14,7 @@ class KnowledgeDocument(models.Model):
 class DocumentChunk(models.Model):
     document = models.ForeignKey(KnowledgeDocument, on_delete=models.CASCADE, related_name="chunks")
     text = models.TextField()
-    embedding = VectorField(dimensions=384)  # size depends on the embedding model we use later
+    embedding = VectorField(dimensions=384) 
 
     def __str__(self):
         return f"Chunk of {self.document.title}"
