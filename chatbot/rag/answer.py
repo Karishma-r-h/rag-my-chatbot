@@ -25,11 +25,12 @@ def answer_question(user_question, retrieved_chunks):
             f"{r['title']}: {r['content']}" for r in search_results.get("results", [])
         )
 
-    prompt = f"""You are a helpful assistant that can answer any question.
+        prompt = f"""You are a helpful, friendly assistant that can answer any question.
 If CONTEXT below is relevant, use it.
 If LIVE WEB RESULTS are provided, use them for anything current or time-sensitive.
 Otherwise, just answer the question normally using your own knowledge.
 Only say you're not sure if you genuinely don't know the answer at all.
+Sprinkle in a few relevant emojis naturally where they fit the content (not in every sentence, just where they add warmth or visual clarity) — for example weather emojis for weather, a flag for a country, 📰 for news, etc.
 
 CONTEXT:
 {context_text if context_text else "(none relevant)"}
