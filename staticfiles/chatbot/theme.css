@@ -1,0 +1,130 @@
+:root {
+  --cream: #FFF9DF;
+  --purple: #B39DDB;
+  --pink: #F4A9C4;
+  --lavender: #F1E4F7;
+  --blue: #7FD3EC;
+  --ink: #2b2b2b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Baloo 2', cursive;
+  background: var(--cream);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+h1 {
+  color: var(--purple);
+  font-size: 42px;
+  margin: 0 0 20px 0;
+  z-index: 2;
+}
+
+.chat-window {
+  width: 100%;
+  max-width: 400px;
+  height: 560px;
+  background: white;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 12px 12px 0 var(--purple);
+  padding: 16px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  z-index: 2;
+}
+
+.bubble-user {
+  background: var(--blue);
+  color: white;
+  border-radius: 16px 16px 4px 16px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  max-width: 80%;
+  margin-left: auto;
+}
+
+.bubble-bot {
+  background: #FFF3B0;
+  color: var(--ink);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  max-width: 80%;
+}
+
+.input-row {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+#msg-input {
+  flex: 1;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 16px;
+  background: var(--lavender);
+  color: #275baa;;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+#msg-input::placeholder {
+  color: var(--pink);
+}
+
+button {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 16px;
+  background: var(--blue);
+  color: white;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+.doodles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodles::before,
+.doodles::after {
+  content: "❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀ ❀";
+  position: absolute;
+  width: 100%;
+  color: var(--pink);
+  opacity: 0.6;
+  font-size: 20px;
+  line-height: 90px;
+  word-spacing: 60px;
+  letter-spacing: 40px;
+  top: 0;
+  left: 0;
+}
+
+.doodles::after {
+  top: 400px;
+}
