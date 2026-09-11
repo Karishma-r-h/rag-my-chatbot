@@ -1,11 +1,14 @@
-from sentence_transformers import SentenceTransformer
+import os
+from google import genai
 
-# This loads the AI model into memory once, the first time it's needed.
-# First run will download the model (~90MB) — that's normal, only happens once.
-_model = SentenceTransformer("all-MiniLM-L6-v2")
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 
 def embed(text: str):
-    """Turn a piece of text into a list of 384 numbers representing its meaning."""
-    vector = _model.encode(text)
-    return vector.tolist()
+    """Turn text into a 768-number vector representing its meaning, using Gemini's API."""
+    result = client.models.embed_content(
+        model="gemini-embedding-001",
+        contents=text,
+        config={"output_dimensionality": 768},
+    )
+    return result.embeddings[0].values
