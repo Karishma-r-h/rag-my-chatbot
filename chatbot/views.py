@@ -1,3 +1,4 @@
+from .kafka_producer import publish_chat_event
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -28,12 +29,14 @@ def chat_view(request):
     else:
         conversation = Conversation.objects.create()
 
-    Message.objects.create(conversation=conversation, role="user", content=question)
+    user_message = Message.objects.create(conversation=conversation, role="user", content=question)
+    publish_chat_event(conversation.id, user_message.id, "user", question)
 
     chunks = retrieve_chunks(question)
     answer, confidence = answer_question(question, chunks)
 
-    Message.objects.create(conversation=conversation, role="bot", content=answer, confidence_score=confidence)
+    bot_message = Message.objects.create(conversation=conversation, role="bot", content=answer, confidence_score=confidence)
+    publish_chat_event(conversation.id, bot_message.id, "bot", answer, confidence)
 
     if confidence == "low":
         conversation.status = "escalated"
