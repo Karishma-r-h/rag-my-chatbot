@@ -31,11 +31,16 @@ def chat_view(request):
     Message.objects.create(conversation=conversation, role="user", content=question)
 
     chunks = retrieve_chunks(question)
-    answer = answer_question(question, chunks)
+    answer, confidence = answer_question(question, chunks)
 
-    Message.objects.create(conversation=conversation, role="bot", content=answer)
+    Message.objects.create(conversation=conversation, role="bot", content=answer, confidence_score=confidence)
+
+    if confidence == "low":
+        conversation.status = "escalated"
+        conversation.save()
 
     return Response({
         "conversation_id": conversation.id,
         "answer": answer,
+        "confidence": confidence,
     })
