@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'chatbot/theme.css' %}">
+  <title>Ask Anything</title>
+</head>
+<body>
+  <div class="doodles"></div>
+
+  <h1>Ask Anything</h1>
+
+  <div class="chat-window" id="chat-window"></div>
+
+  <div class="input-row">
+    <input id="msg-input" placeholder="I'm listening...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script src="{% static 'chatbot/chat.js' %}"></script>
+</body>
+</html>
