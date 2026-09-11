@@ -25,13 +25,14 @@ def answer_question(user_question, retrieved_chunks):
             f"{r['title']}: {r['content']}" for r in search_results.get("results", [])
         )
 
-    prompt = f"""You are a support assistant.
-Use the CONTEXT below when it answers the question.
+    prompt = f"""You are a helpful assistant that can answer any question.
+If CONTEXT below is relevant, use it.
 If LIVE WEB RESULTS are provided, use them for anything current or time-sensitive.
-If neither source has the answer, say "I'm not sure, let me get a human."
+Otherwise, just answer the question normally using your own knowledge.
+Only say you're not sure if you genuinely don't know the answer at all.
 
 CONTEXT:
-{context_text}
+{context_text if context_text else "(none relevant)"}
 
 LIVE WEB RESULTS:
 {live_info if live_info else "(none needed for this question)"}
@@ -44,3 +45,5 @@ QUESTION: {user_question}
         contents=prompt,
     )
     return response.text
+
+    
