@@ -30,8 +30,12 @@ class Command(BaseCommand):
                 msg = consumer.poll(timeout=1.0)
                 if msg is None:
                     continue
-                event = json.loads(msg.value())
-
+                if msg.error():
+                    continue
+                try:
+                    event = json.loads(msg.value())
+                except (json.JSONDecodeError, TypeError):
+                    continue
                 conversation_id = event.get("conversation_id")
                 if not conversation_id:
                     continue

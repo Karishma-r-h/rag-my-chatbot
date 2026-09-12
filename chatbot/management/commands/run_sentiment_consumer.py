@@ -26,8 +26,12 @@ class Command(BaseCommand):
                 msg = consumer.poll(timeout=1.0)
                 if msg is None:
                     continue
-                event = json.loads(msg.value())
-
+                if msg.error():
+                    continue
+                try:
+                    event = json.loads(msg.value())
+                except (json.JSONDecodeError, TypeError):
+                    continue
                 if event.get("role") != "user":
                     continue  # only check what the user said, not the bot's replies
 

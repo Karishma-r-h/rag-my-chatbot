@@ -24,7 +24,12 @@ class Command(BaseCommand):
                 msg = consumer.poll(timeout=1.0)
                 if msg is None:
                     continue
-                event = json.loads(msg.value())
+                if msg.error():
+                    continue
+                try:
+                    event = json.loads(msg.value())
+                except (json.JSONDecodeError, TypeError):
+                    continue
                 message_count += 1
 
                 if event.get("confidence") in confidence_counts:
