@@ -1,3 +1,5 @@
+import os
+import requests
 from django.core.management.base import BaseCommand
 from confluent_kafka import Consumer
 import json
@@ -52,7 +54,6 @@ class Command(BaseCommand):
                     if any(word in content for word in FRUSTRATION_WORDS):
                         should_escalate = True
                         reason = "user sounds frustrated"
-
                 if should_escalate:
                     try:
                         conversation = Conversation.objects.get(id=conversation_id)
@@ -62,7 +63,19 @@ class Command(BaseCommand):
                             self.stdout.write(self.style.ERROR(
                                 f"🚨 Escalated conversation {conversation_id} — reason: {reason}"
                             ))
+                            self.send_slack_alert(conversation_id, reason, event.get("content", ""))
                     except Conversation.DoesNotExist:
                         pass
         except KeyboardInterrupt:
             consumer.close()
+
+    def send_slack_alert(self, conversation_id, reason, last_message):
+        webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
+        self.stdout.write(f"DEBUG: webhook_url is {webhook_url}")
+        if not webhook_url:
+            self.stdout.write("DEBUG: no webhook URL found, skipping")
+            return
+        response = requests.post(webhook_url, json={
+            "text": f"🚨 *Conversation #{conversation_id} needs a human*\n*Reason:* {reason}\n*Last message:* {last_message}"
+        })
+        self.stdout.write(f"DEBUG: Slack response {response.status_code} - {response.text}")
