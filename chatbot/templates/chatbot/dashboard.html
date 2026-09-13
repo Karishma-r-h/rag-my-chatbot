@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'chatbot/theme.css' %}">
+  <title>Agent Dashboard</title>
+  <style>
+    .alert-card {
+      background: #FFE0E0;
+      border: 3px solid #2b2b2b;
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin: 12px auto;
+      max-width: 500px;
+      text-align: left;
+    }
+    .no-alerts {
+      color: #888;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚨 Live Escalations</h1>
+  <div id="alerts-container">
+    <p class="no-alerts" id="empty-message">Waiting for escalations...</p>
+  </div>
+
+  <script>
+    const eventSource = new EventSource("/api/events/");
+    const container = document.getElementById("alerts-container");
+    const emptyMessage = document.getElementById("empty-message");
+
+    eventSource.onmessage = function (e) {
+      if (emptyMessage) emptyMessage.remove();
+      const data = JSON.parse(e.data);
+      const card = document.createElement("div");
+      card.className = "alert-card";
+      card.innerHTML = `
+        <strong>Conversation #${data.conversation_id}</strong><br>
+        Reason: ${data.reason}<br>
+        Last message: "${data.last_message}"
+      `;
+      container.prepend(card);
+    };
+  </script>
+</body>
+</html>

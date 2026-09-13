@@ -1,3 +1,6 @@
+import os
+from django.http import StreamingHttpResponse
+import redis
 from .kafka_producer import publish_chat_event
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -47,3 +50,18 @@ def chat_view(request):
         "answer": answer,
         "confidence": confidence,
     })
+
+def agent_dashboard(request):
+    return render(request, "chatbot/dashboard.html")
+
+
+def agent_event_stream(request):
+    def event_generator():
+        redis_client = redis.from_url(os.environ["REDIS_URL"])
+        pubsub = redis_client.pubsub()
+        pubsub.subscribe("agent-notifications")
+        for message in pubsub.listen():
+            if message["type"] == "message":
+                yield f"data: {message['data'].decode()}\n\n"
+
+    return StreamingHttpResponse(event_generator(), content_type="text/event-stream")

@@ -1,10 +1,9 @@
 import os
+import json
 import requests
+import redis
 from django.core.management.base import BaseCommand
 from confluent_kafka import Consumer
-import json
-import os
-import django
 
 FRUSTRATION_WORDS = [
     "frustrated", "annoyed", "angry", "useless", "terrible", "worst",
@@ -38,6 +37,7 @@ class Command(BaseCommand):
                     event = json.loads(msg.value())
                 except (json.JSONDecodeError, TypeError):
                     continue
+
                 conversation_id = event.get("conversation_id")
                 if not conversation_id:
                     continue
@@ -54,6 +54,7 @@ class Command(BaseCommand):
                     if any(word in content for word in FRUSTRATION_WORDS):
                         should_escalate = True
                         reason = "user sounds frustrated"
+
                 if should_escalate:
                     try:
                         conversation = Conversation.objects.get(id=conversation_id)
@@ -75,7 +76,15 @@ class Command(BaseCommand):
         if not webhook_url:
             self.stdout.write("DEBUG: no webhook URL found, skipping")
             return
+
         response = requests.post(webhook_url, json={
             "text": f"🚨 *Conversation #{conversation_id} needs a human*\n*Reason:* {reason}\n*Last message:* {last_message}"
         })
         self.stdout.write(f"DEBUG: Slack response {response.status_code} - {response.text}")
+
+        redis_client = redis.from_url(os.environ["REDIS_URL"])
+        redis_client.publish("agent-notifications", json.dumps({
+            "conversation_id": conversation_id,
+            "reason": reason,
+            "last_message": last_message,
+        }))
