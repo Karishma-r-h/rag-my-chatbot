@@ -12,5 +12,8 @@ def publish_chat_event(conversation_id, message_id, role, content, confidence=No
         "content": content,
         "confidence": confidence,
     }
-    producer.produce("chat-events", json.dumps(event).encode())
-    producer.flush()
+    try:
+        producer.produce("chat-events", json.dumps(event).encode())
+        producer.flush(timeout=1)
+    except Exception:
+        pass  # Kafka isn't available in production (e.g. on Render) — safe to skip
