@@ -6,7 +6,11 @@ from tavily import TavilyClient
 gemini_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 tavily_client = TavilyClient(api_key=os.environ["TAVILY_API_KEY"])
 
-LIVE_KEYWORDS = ["today", "current", "currently", "right now", "latest", "live", "happening", "this week", "news"]
+LIVE_KEYWORDS = [
+    "today", "current", "currently", "right now", "latest", "live",
+    "happening", "this week", "news", "weather", "temperature",
+    "score", "price", "stock", "now"
+]
 
 # If the closest matching chunk is farther than this, treat it as "not really relevant"
 DISTANCE_THRESHOLD = 0.5
