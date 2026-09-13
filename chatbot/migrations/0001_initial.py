@@ -10,7 +10,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-    ]
+    ('chatbot', '0004_enable_pgvector_extension'),
+]
 
     operations = [
         migrations.CreateModel(
