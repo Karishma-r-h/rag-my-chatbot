@@ -1,12 +1,20 @@
 let conversationId = null;
 
+function startNewConversation() {
+  conversationId = null;
+  document.getElementById("chat-window").innerHTML = "";
+}
+
 async function sendMessage() {
   const input = document.getElementById("msg-input");
   const chatWindow = document.getElementById("chat-window");
   const message = input.value.trim();
   if (!message) return;
 
-  chatWindow.innerHTML += `<div class="bubble-user">${message}</div>`;
+  chatWindow.innerHTML += `
+    <div class="bubble-row user">
+      <div class="bubble-user">${message}</div>
+    </div>`;
   input.value = "";
   chatWindow.scrollTop = chatWindow.scrollHeight;
 
@@ -18,10 +26,19 @@ async function sendMessage() {
   const data = await response.json();
   conversationId = data.conversation_id;
 
-  chatWindow.innerHTML += `<div class="bubble-bot">${data.answer}</div>`;
+  chatWindow.innerHTML += `
+    <div class="bubble-row bot">
+      <div class="bot-message">
+        <div class="bot-label">ASSISTANT</div>
+        <div class="bubble-bot">${data.answer}</div>
+      </div>
+    </div>`;
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 document.getElementById("msg-input").addEventListener("keypress", function (e) {
-  if (e.key === "Enter") sendMessage();
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 });
