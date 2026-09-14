@@ -5,13 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'chatbot/theme.css' %}">
   <title>RAG Assistant</title>
 </head>
 <body>
   <div class="app-shell">
 
-    <aside class="sidebar">
+    <!-- Mobile top bar: only visible on small screens -->
+    <div class="mobile-topbar d-flex d-md-none align-items-center justify-content-between">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()">☰</button>
+      <div class="brand-name">Assistant</div>
+      <div style="width:32px"></div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="brand-icon">📖</div>
         <div>
@@ -29,8 +37,11 @@
       </div>
     </aside>
 
+    <!-- Dims the page behind the sidebar when open on mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
     <main class="main-panel">
-      <header class="chat-header">
+      <header class="chat-header d-none d-md-flex">
         <div class="header-title">Ask Anything</div>
         <div class="header-badge">Live &amp; document search</div>
         <div class="model-pill">● gemini · flash</div>

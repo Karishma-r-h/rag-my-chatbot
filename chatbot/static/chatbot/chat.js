@@ -5,6 +5,11 @@ function startNewConversation() {
   document.getElementById("chat-window").innerHTML = "";
 }
 
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("sidebar-backdrop").classList.toggle("open");
+}
+
 async function sendMessage() {
   const input = document.getElementById("msg-input");
   const chatWindow = document.getElementById("chat-window");
