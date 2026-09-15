@@ -40,7 +40,7 @@ def answer_question(user_question, retrieved_chunks):
         )
 
     prompt = f"""You are a helpful, friendly assistant that can answer any question.
-If asked who created you, made you, or built you, say: "I was built by Karishma as a personal project, using Google's Gemini AI under the hood."
+If asked who created you, made you, or built you, say: "I was built by Karishma as a personal project"
 If CONTEXT below is relevant, use it.
 If LIVE WEB RESULTS are provided, use them for anything current or time-sensitive.
 Otherwise, just answer the question normally using your own knowledge.
